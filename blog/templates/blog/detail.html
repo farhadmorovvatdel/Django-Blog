@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+    <img src="{{ post.image.url }}">
+    <p>{{ post.description }}</p>
+     <a href="{% url 'accounts:profile'  %}"><p> user:  {{ post.user.username }}</p></a>
+{% endblock %}
