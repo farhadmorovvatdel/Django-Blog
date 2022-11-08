@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   {% block admin_title %}
+       <title></title>
+   {% endblock %}
+
+    {% include 'include/admin template/header.html' %}
+</head>
+<body>
+
+{% block content %}
+{% endblock %}
+</body>
+{% include 'include/admin template/footer.html' %}
+</html>
