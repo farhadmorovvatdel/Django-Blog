@@ -9,6 +9,9 @@ class Category(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+    class Meta:
+        verbose_name = 'Categories'
+        verbose_name_plural = 'Categories'
 
 
 
@@ -28,6 +31,10 @@ class Blog(models.Model):
     def save(self,*args,**kwargs):
         self.slug = slugify(self.title)
         return super(Blog, self).save(*args,**kwargs)
+
+    class Meta:
+        verbose_name = 'Blogs'
+        verbose_name_plural = 'Blogs'
 
 
 
