@@ -1,9 +1,109 @@
-{% extends 'base.html' %}
-{% block content %}
-    {% for post in posts %}
-        <p>{{ post.title }}</p>
-        <img src="{{ post.image.url }}">
-        <p>{{ post.description }}</p>
-        <a href="{% url 'blog:delete_post' post.id %}">delete post</a>
-    {% endfor %}
+
+{% extends 'include/admin template/base.html' %}
+{% block admin_title %}
+    <title>UserPost Page</title>
 {% endblock %}
+
+{% block content %}
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item nav-profile">
+              <a href="#" class="nav-link">
+                <div class="nav-profile-image">
+                    {% if profile.image %}
+                        <img src="{{ profile.image.url }}" alt="profile">
+                    {% else %}
+                        <img src="/static/assets/images/profile/avatar.jpg">
+                    {% endif %}
+                  <span class="login-status online"></span>
+                  <!--change to offline or busy as needed-->
+                </div>
+                <div class="nav-profile-text d-flex flex-column">
+                  <span class="font-weight-bold mb-2">{{ profile.user.username}}</span>
+
+                </div>
+
+              </a>
+            </li>
+            <li class="nav-item">
+{#              <a class="nav-link" href="{% url 'accounts:upateprofile' profile.id %}">#}
+                <span class="menu-title">Edit Profile </span>
+                <i class="mdi mdi-home menu-icon"></i>
+              </a>
+            </li>
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">#}
+{#                <span class="menu-title">Basic UI Elements</span>#}
+{#                <i class="menu-arrow"></i>#}
+{#                <i class="mdi mdi-crosshairs-gps menu-icon"></i>#}
+{#              </a>#}
+{#              <div class="collapse" id="ui-basic">#}
+{#                <ul class="nav flex-column sub-menu">#}
+{#                  <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>#}
+{#                  <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>#}
+{#                </ul>#}
+{#              </div>#}
+{#            </li>#}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:user_post' %}">
+                <span class="menu-title">User Posts</span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              </a>
+            </li>
+           <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:Blogs' %}">
+                <span class="menu-title">HomePage</span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item sidebar-actions">
+              <span class="nav-link">
+                <a class="btn btn-gradient-primary mt-4 mr-2" href="{% url 'blog:create_post' %}">+ Add Post</a>
+              </span>
+            </li>
+          </ul>
+        </nav>
+        <!-- partial -->
+{#        <div class="main-panel">#}
+{#          <div class="content-wrapper">#}
+{#            <div class="page-header">#}
+{#              <h3 class="page-title">#}
+{#                <span class="bg-info-primary me-2">#}
+{#                   Profile#}
+{#                </span>#}
+{#              </h3>#}
+{#            </div>#}
+              <div class="row">
+                  <div class="col-9">
+                  <table>
+                      <tr>
+                        <td>title</td>
+                        <td>publish</td>
+                        <td>image</td>
+                        <td>description</td>
+                       <td>category</td>
+                     </tr>
+                     <tr>
+                        {% for post in posts %}
+                          <td> {{ post.title }}</td>
+                          <td>{{ post.publish }}</td>
+                          {% if post.image %}
+                            <td> <img src="{{ post.image.url }}"></td>
+                          {% endif %}
+                          <td>{{ post.description }}</td>
+                          <td> {{ post.category.title}}</td>
+                       {% endfor %}
+                     </tr>
+                  </table>
+                  </div>
+                  <div class="col-3">
+                  </div>
+              </div>
+      </div>
+{% endblock %}
+
+
+

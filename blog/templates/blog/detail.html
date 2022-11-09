@@ -1,6 +1,30 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <img src="{{ post.image.url }}">
-    <p>{{ post.description }}</p>
-     <a href="{% url 'accounts:profile'  %}"><p> user:  {{ post.user.username }}</p></a>
+    <div class="row">
+      <div class="col-3">
+       <div class="card">
+         <div class="card-body">
+           {% if post.image %}
+               <img src="{{ post.image.url }}">    q
+           {% endif %}
+           <h5 class="card-title">{{ post.title }}</h5>
+           <p class="card-text">{{ post.description }}</p><a href="{% url 'accounts:profile'  %}" class="btn btn-primary"><p> user: {{ post.user.username }}</p></a>
+         </div>
+      </div>
+      </div>
+    </div>
+</br>
+  <form method="post" action="{% url 'blog:AddComment' post.id %}">
+    {% csrf_token %}
+     {{ commentform.as_p }}
+    <button type="submit" class="btn btn-success btn-sm">send comment</button>
+  </form>
+   <br>
+    <span>Total comments:{{ post.TotalComments }} </span>
+    <br>
+    {% for item in post.postcomment.all %}
+        <p> user : {{ item.user }}</p>
+        <p> comment : {{ item.body }}</p>
+    {% endfor %}
 {% endblock %}
