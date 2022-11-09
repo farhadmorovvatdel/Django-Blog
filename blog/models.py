@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import  slugify
-from datetime import datetime
-
+from django.utils import timezone
 class Category(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50,unique=True)
@@ -39,7 +38,8 @@ class Blog(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='usercomment',null=True)
     post= models.ForeignKey(Blog,on_delete=models.CASCADE,related_name='postcomment',null=True)
-    created = models.DateTimeField(auto_now_add=True,default=datetime.now())
+    body = models.TextField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.user.username} - {self.post.title}'
