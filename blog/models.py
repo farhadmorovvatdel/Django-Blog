@@ -2,6 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import  slugify
 
+
+class Category(models.Model):
+    title = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50,unique=True)
+
+    def __str__(self):
+        return f'{self.title}'
+
+
+
 class Blog(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_blog')
     title=models.CharField(max_length=100)
@@ -11,11 +21,15 @@ class Blog(models.Model):
     publish=models.BooleanField(default=False)
     image=models.ImageField(upload_to='blogs/',blank=True)
     description=models.TextField(null=True,blank=True)
+    category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name='categories',null=True)
     def __str__(self):
         return  f'{self.user.username}-{self.title}'
 
     def save(self,*args,**kwargs):
         self.slug = slugify(self.title)
-        super(Blog, self).save(*args,**kwargs)
+        return super(Blog, self).save(*args,**kwargs)
+
+
+
 
 
