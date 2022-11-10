@@ -6,7 +6,7 @@
        <div class="card">
          <div class="card-body">
            {% if post.image %}
-               <img src="{{ post.image.url }}">    q
+               <img src="{{ post.image.url }}">
            {% endif %}
            <h5 class="card-title">{{ post.title }}</h5>
            <p class="card-text">{{ post.description }}</p><a href="{% url 'accounts:profile'  %}" class="btn btn-primary"><p> user: {{ post.user.username }}</p></a>
@@ -21,18 +21,35 @@
     <button type="submit" class="btn btn-success btn-sm">send comment</button>
   </form>
     <br>
+   <p>
+   {% if like is False and unlike is False%}
+          <a class="btn btn-primary btn-sm " href="{{ post.LikePost }}">LikePost</a>
+          <a class="btn btn-primary btn-sm  " href="{{ post.UnlikePost }}">UnLikePost</a>
+   {% elif like is True %}
+          <a class="btn btn-primary btn-sm " href={{ post.DisLikePost }}>DislikePost</a>
+          <a class="btn btn-primary btn-sm disabled " href="{{ post.UnlikePost }}">UnLikePost</a>
+   {% elif unlike is True %}
+          <a class="btn btn-primary btn-sm disabled " href="{{ post.LikePost }}">LikePost</a>
+          <a class="btn btn-primary btn-sm " href={{ post.UnDislikePost }}>DisUnlikePost</a>
+    {% endif %}
 
-    <a class="btn btn-primary btn-sm" href="{{ post.LikePost }}">LikePost</a>
+
 
     <span> Total Likes :{{ post.TotalLikes }}</span>
 
+{#     <a class="btn btn-primary btn-sm disabled" href="{{ post.UnlikePost }}">UnLikePost</a>#}
+{# #}
+{#        <a class="btn btn-primary btn-sm " href="{{ post.UnlikePost }}">UnLikePost</a>#}
+
+    <span> Total UnLikes :{{ post.TotalUnlikes }}</span>
    <br>
     <span>Total comments:{{ post.TotalComments }} </span>
     <br>
     {% for item in post.postcomment.all %}
         <p> user : {{ item.user }}</p>
-        {%  if item.user == post.user %}
-        <span> comment : {{ item.body }}</span> <span> <a class="btn btn-danger btn-sm" href="{{ item.DeleteComment }}"> DeleteComment</a></span> <span> <a class="btn btn-warning btn-sm" href="{{ item.UpdateComment }}"> UpdateComment</a></span>
+        <span> comment : {{ item.body }}</span>
+         {%  if item.user == request.user %}
+            <span> <a class="btn btn-danger btn-sm" href="{{ item.DeleteComment }}"> DeleteComment</a></span> <span> <a class="btn btn-warning btn-sm" href="{{ item.UpdateComment }}"> UpdateComment</a></span>
         {% endif %}
     {% endfor %}
 {% endblock %}

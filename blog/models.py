@@ -40,6 +40,15 @@ class Blog(models.Model):
     def LikePost(self):
         return reverse('blog:LikePost',args={self.id})
 
+    def UnlikePost(self):
+        return reverse('blog:UnLikePost',args={self.id})
+
+    def UnDislikePost(self):
+        return reverse('blog:UnDisLikePost',args={self.id})
+
+    def DisLikePost(self):
+        return reverse('blog:DisLikePost',args={self.id})
+
     def AddComment(self):
         return reverse('blog:AddComment',args={self.id})
 
@@ -51,6 +60,9 @@ class Blog(models.Model):
         return total
     def TotalLikes(self):
         total=self.postlike.count()
+        return total
+    def TotalUnlikes(self):
+        total=self.postunlike.count()
         return total
 
 class Comment(models.Model):
