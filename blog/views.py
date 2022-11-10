@@ -1,9 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views import View
 
 
-from .models import Blog,Comment
+from .models import Blog,Comment,LikePost
 from django.urls import reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,DeleteView
 
@@ -82,5 +83,13 @@ def UpdateComment(request,comment_id):
        return redirect('blog:detail',commentt.post.id)
     return render(request,'blog/updatecomment.html',{'updatecomment':updatecomment,'comment_id':comment_id})
 
+def AddLikePost(request,post_id):
+     blog=get_object_or_404(Blog,id=post_id)
+     is_likepost=LikePost.objects.filter(user=request.user,post=blog).exists()
+     if is_likepost is False:
+         addlike=LikePost.objects.create(user=request.user,post=blog,is_like=True)
+         return redirect('blog:detail',post_id)
+
+     return render(request,'blog/detail.html')
 
 

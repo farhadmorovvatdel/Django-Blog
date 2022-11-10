@@ -37,8 +37,20 @@ class Blog(models.Model):
         verbose_name = 'Blogs'
         verbose_name_plural = 'Blogs'
 
+    def LikePost(self):
+        return reverse('blog:LikePost',args={self.id})
+
+    def AddComment(self):
+        return reverse('blog:AddComment',args={self.id})
+
+    def get_absolute_url(self):
+        return reverse('blog:detail',args={self.id})
+
     def TotalComments(self):
         total=self.postcomment.count()
+        return total
+    def TotalLikes(self):
+        total=self.postlike.count()
         return total
 
 class Comment(models.Model):
@@ -50,6 +62,30 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.post.title}'
 
+    def DeleteComment(self):
+        return reverse('blog:DeleteComment',args={self.id})
+    def UpdateComment(self):
+        return reverse('blog:UpdateComment',args={self.id})
+
+
+
+class LikePost(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='userlike')
+    post=models.ForeignKey(Blog,on_delete=models.CASCADE,null=True,related_name='postlike')
+    is_like = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.post.title}'
+
+
+
+
+class UnlikePost(models.Model):
+    user= models.ForeignKey(User,on_delete=models.CASCADE,related_name='userunlike')
+    post= models.ForeignKey(Blog, on_delete=models.CASCADE,related_name='postunlike')
+    is_unlike=models.BooleanField(default=False)
+    def __str__(self):
+        return f'{self.user.username} - {self.post.title}'
 
 
 

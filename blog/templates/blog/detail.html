@@ -15,18 +15,24 @@
       </div>
     </div>
 </br>
-  <form method="post" action="{% url 'blog:AddComment' post.id %}">
+  <form method="post" action="{{ post.AddComment }}">
     {% csrf_token %}
      {{ commentform.as_p }}
     <button type="submit" class="btn btn-success btn-sm">send comment</button>
   </form>
+    <br>
+
+    <a class="btn btn-primary btn-sm" href="{{ post.LikePost }}">LikePost</a>
+
+    <span> Total Likes :{{ post.TotalLikes }}</span>
+
    <br>
     <span>Total comments:{{ post.TotalComments }} </span>
     <br>
     {% for item in post.postcomment.all %}
         <p> user : {{ item.user }}</p>
         {%  if item.user == post.user %}
-        <span> comment : {{ item.body }}</span> <span> <a class="btn btn-danger btn-sm" href="{% url 'blog:DeleteComment' item.id %}"> DeleteComment</a></span> <span> <a class="btn btn-warning btn-sm" href="{%  url 'blog:UpdateComment' item.id %}"> UpdateComment</a></span>
+        <span> comment : {{ item.body }}</span> <span> <a class="btn btn-danger btn-sm" href="{{ item.DeleteComment }}"> DeleteComment</a></span> <span> <a class="btn btn-warning btn-sm" href="{{ item.UpdateComment }}"> UpdateComment</a></span>
         {% endif %}
     {% endfor %}
 {% endblock %}

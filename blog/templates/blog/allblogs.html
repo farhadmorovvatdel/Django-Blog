@@ -6,7 +6,7 @@
         {% if item.image %}
        <img src="{{ item.image.url }}" width="80px" height="80px">
         {% endif %}
-        <a href="{% url 'blog:detail' item.id %}">more info</a>
+        <a href="{{ item.get_absolute_url }}">more info</a>
     {% endfor %}
     {% if is_paginated %}
   <ul class="pagination">
