@@ -25,6 +25,8 @@
     <br>
     {% for item in post.postcomment.all %}
         <p> user : {{ item.user }}</p>
-        <p> comment : {{ item.body }}</p>
+        {%  if item.user == post.user %}
+        <span> comment : {{ item.body }}</span> <span> <a class="btn btn-danger btn-sm" href="{% url 'blog:DeleteComment' item.id %}"> DeleteComment</a></span> <span> <a class="btn btn-warning btn-sm" href="{%  url 'blog:UpdateComment' item.id %}"> UpdateComment</a></span>
+        {% endif %}
     {% endfor %}
 {% endblock %}

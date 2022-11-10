@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import  slugify
 from django.utils import timezone
 from ckeditor_uploader.fields import RichTextUploadingField
-
+from django.urls import reverse
 class Category(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50,unique=True)
@@ -49,6 +49,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.post.title}'
+
+
 
 
 

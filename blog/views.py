@@ -2,12 +2,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views import View
 
-import blog
-from .models import Blog
+
+from .models import Blog,Comment
 from django.urls import reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,DeleteView
 
-from .forms import CommentForm,CreatePostForm
+from .forms import CommentForm,CreatePostForm,UpdateCommentForm
 
 class All_Blogs(ListView):
     context_object_name = 'blog'
@@ -32,8 +32,6 @@ class CreatePost(LoginRequiredMixin,CreateView):
     template_name = 'blog/create_post.html'
     success_url = reverse_lazy('blog:Blogs')
     form_class = CreatePostForm
-    # model = Blog
-    # fields =['title', 'image', 'description','category']
 
     def form_valid(self,form):
         print(self.request.path)
@@ -68,4 +66,21 @@ def AddComment(request,id):
         newcomment.save()
         return redirect('blog:detail',post.id)
     return render(request,'blog/detail.html')
+
+def DeleteComment(request,comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    comment.delete()
+    return redirect('blog:detail',comment.post.id)
+
+def UpdateComment(request,comment_id):
+    commentt=get_object_or_404(Comment,id=comment_id)
+    updatecomment = UpdateCommentForm(request.POST or None,instance=commentt)
+    if updatecomment.is_valid():
+       body = updatecomment.cleaned_data['body']
+       comment = Comment.objects.filter(id=comment_id).update(body=body)
+
+       return redirect('blog:detail',commentt.post.id)
+    return render(request,'blog/updatecomment.html',{'updatecomment':updatecomment,'comment_id':comment_id})
+
+
 

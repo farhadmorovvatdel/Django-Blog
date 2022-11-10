@@ -6,7 +6,7 @@ from ckeditor.widgets import CKEditorWidget
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields=['body',]
+        fields=['body']
 
 
 class CreatePostForm(forms.ModelForm):
@@ -14,3 +14,8 @@ class CreatePostForm(forms.ModelForm):
         model =Blog
         fields =['title', 'image', 'description','category','publish']
         widget = {'description':CKEditorWidget}
+
+class UpdateCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
