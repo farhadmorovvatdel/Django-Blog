@@ -1,8 +1,107 @@
-{% extends 'base.html' %}
+{% extends 'include/admin template/base.html' %}
+{% block admin_title %}
+    <title>Delete Page</title>
+{% endblock %}
 {% block content %}
-    <form method="post">{% csrf_token %}
-<p>Are you sure you want to delete "{{ object }}"?</p>
-	<input type="submit" value="Confirm">
-</form>
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item nav-profile">
+              <a href="#" class="nav-link">
+                <div class="nav-profile-image">
+                    {% if profile.image %}
+                        <img src="{{ profile.image.url }}" alt="profile">
+                    {% else %}
+                        <img src="/static/assets/images/profile/avatar.jpg">
+                    {% endif %}
+                  <span class="login-status online"></span>
+                  <!--change to offline or busy as needed-->
+                </div>
+                <div class="nav-profile-text d-flex flex-column">
+                  <span class="font-weight-bold mb-2">{{ profile.user.username}}</span>
 
+                </div>
+
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'accounts:upateprofile' profile.id %}">
+                <span class="menu-title">Edit Profile </span>
+
+              </a>
+            </li>
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">#}
+{#                <span class="menu-title">Basic UI Elements</span>#}
+{#                <i class="menu-arrow"></i>#}
+{#                <i class="mdi mdi-crosshairs-gps menu-icon"></i>#}
+{#              </a>#}
+{#              <div class="collapse" id="ui-basic">#}
+{#                <ul class="nav flex-column sub-menu">#}
+{#                  <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>#}
+{#                  <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>#}
+{#                </ul>#}
+{#              </div>#}
+{#            </li>#}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:user_post' %}">
+                <span class="menu-title">User Posts</span>
+
+              </a>
+            </li>
+           <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:Blogs' %}">
+                <span class="menu-title">HomePage</span>
+
+              </a>
+            </li>
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" href="pages/charts/chartjs.html">#}
+{#                <span class="menu-title">Charts</span>#}
+{#                <i class="mdi mdi-chart-bar menu-icon"></i>#}
+{#              </a>#}
+{#            </li>#}
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" href="pages/tables/basic-table.html">#}
+{#                <span class="menu-title">Tables</span>#}
+{#                <i class="mdi mdi-table-large menu-icon"></i>#}
+{#              </a>#}
+{#            </li>#}
+{#            <li class="nav-item">#}
+
+            <li class="nav-item sidebar-actions">
+              <span class="nav-link">
+                <a class="btn btn-gradient-primary mt-4 mr-2" href="{% url 'blog:create_post' %}">+ Add Post</a>
+              </span>
+            </li>
+          </ul>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="bg-info-primary me-2">
+                   Delete Post
+                </span>
+              </h3>
+            </div>
+              <div class="row">
+
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+               <p> do yo want delete this blog ??!</p>
+               <p> title is :{{ object.title }} </p>
+                <p> author :{{ object.user.username }}</p>
+
+               <input type="submit" value="Delete" class="btn btn-danger bnt-sm">
+              </form>
+
+          </div>
+
+        </div>
+
+      </div>
 {% endblock %}

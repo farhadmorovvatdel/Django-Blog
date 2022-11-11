@@ -15,6 +15,12 @@
       </div>
     </div>
 </br>
+    <form method="post" action="">
+    {% csrf_token %}
+
+    <input type="submit" value="send rate" class="btn btn-primary btn-sm">
+
+    </form>
   <form method="post" action="{{ post.AddComment }}">
     {% csrf_token %}
      {{ commentform.as_p }}

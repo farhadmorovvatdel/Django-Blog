@@ -1,3 +1,4 @@
+from django.core import validators
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import  slugify
@@ -31,7 +32,8 @@ class Blog(models.Model):
     image=models.ImageField(upload_to='blogs/',blank=True)
     description=RichTextUploadingField(null=True,blank=True)
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name='categories',null=True)
-    rate=models.PositiveIntegerField(null=True,blank=True,validators=[MinValueValidator(0),MaxValueValidator(5)])
+
+
 
     def __str__(self):
         return  f'{self.user.username}-{self.title}'
@@ -108,5 +110,9 @@ class UnlikePost(models.Model):
 
 
 
+
+class RatePost(models.Model):
+    post= models.ForeignKey(Blog, on_delete=models.CASCADE,related_name='ratepost')
+    rate = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True)
 
 

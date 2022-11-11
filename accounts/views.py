@@ -1,4 +1,4 @@
-from django.shortcuts import render
+
 from django.shortcuts import render,redirect
 from django.views import View
 from django.views.generic import UpdateView
@@ -136,4 +136,3 @@ class PasswordChange(LoginRequiredMixin,View):
             else:
                 form.add_error('currentpassword','Password is wrong')
         return render(request, 'accounts/PasswordChange.html', {'form': form})
-

@@ -1,10 +1,10 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render,get_object_or_404,redirect
+from django.shortcuts import render,get_object_or_404,redirect,reverse
 from django.views import View
 
 from accounts.models import Profile
-from .models import Blog,Comment,LikePost,UnlikePost
+from .models import Blog, Comment, LikePost, UnlikePost,RatePost
 from django.urls import reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,DeleteView,UpdateView
 
@@ -24,15 +24,16 @@ class DetailPost(DetailView):
     template_name = 'blog/detail.html'
     context_object_name = 'post'
     model=Blog
+
     def get_object(self,**kwargs):
         pk=self.kwargs['pk']
         queryset = get_object_or_404(Blog,pk=pk)
-
         return queryset
     def get_context_data(self, **kwargs):
         context = super(DetailPost, self).get_context_data(**kwargs)
         blog=self.get_object()
         context['commentform']=CommentForm
+        # context['addrateform']=RatePostForm
         context['like']=LikePost.objects.filter(user=self.request.user,post=blog.id,is_like=True).exists()
         context['unlike']=UnlikePost.objects.filter(user=self.request.user,post=blog.id,is_unlike=True).exists()
         return context
@@ -42,7 +43,7 @@ class DetailPost(DetailView):
 
 class CreatePost(LoginRequiredMixin,CreateView):
     template_name = 'blog/create_post.html'
-    success_url = reverse_lazy('blog:Blogs')
+    success_url = reverse_lazy('blog:user_post')
     form_class = CreatePostForm
 
     def form_valid(self,form):
@@ -50,6 +51,11 @@ class CreatePost(LoginRequiredMixin,CreateView):
         obj=form.save(commit=False)
         obj.user=self.request.user
         return super(CreatePost, self).form_valid(form)
+    def get_context_data(self):
+        context = super(CreatePost, self).get_context_data()
+        context["profile"]=Profile.objects.get(user=self.request.user)
+        return context
+
 
 
 
@@ -67,11 +73,32 @@ class UpdatePost(UpdateView):
     success_url = reverse_lazy('blog:user_post')
     template_name = 'blog/upatepost.html'
     form_class =UpdatePostForm
+    context_object_name = 'profile'
+    def get_object(self,queryset=None):
+        pk=self.kwargs['pk']
+        query=Blog.objects.get(pk=pk)
+        return query
+    def get_context_data(self, **kwargs):
+        context=super(UpdatePost, self).get_context_data(**kwargs)
+        context['profile']=Profile.objects.get(user=self.request.user)
+        return context
+
+
 
 class DeletePost(DeleteView):
     model = Blog
     success_url = reverse_lazy('blog:user_post')
     template_name ='blog/confirm_delete.html'
+
+    def get_object(self,queryset=None):
+        pk=self.kwargs['pk']
+        query=Blog.objects.get(pk=pk)
+        return query
+    def get_context_data(self, **kwargs):
+        context=super(DeletePost, self).get_context_data(**kwargs)
+        context['profile']=Profile.objects.get(user=self.request.user)
+        return context
+
 
 
 
@@ -136,8 +163,9 @@ def AddUnDisLikePost(request,post_id):
     return redirect('blog:detail', blog.id)
 
 
-def AddRate(request,post_id):
-    form=RatePostForm(request.POST or None)
-    if form.is_valid():
-        pass
+
+
+
+
+
 

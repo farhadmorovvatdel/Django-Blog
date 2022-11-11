@@ -17,4 +17,5 @@ urlpatterns=[
     path('dislikepost/<int:post_id>/', AddDisLikePost, name='DisLikePost'),
     path('disunlikepost/<int:post_id>/', AddUnDisLikePost, name='UnDisLikePost'),
 
+
 ]
