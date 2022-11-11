@@ -3,12 +3,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views import View
 
-
+from accounts.models import Profile
 from .models import Blog,Comment,LikePost,UnlikePost
 from django.urls import reverse_lazy
-from django.views.generic import ListView,DetailView,CreateView,DeleteView
+from django.views.generic import ListView,DetailView,CreateView,DeleteView,UpdateView
 
-from .forms import CommentForm,CreatePostForm,UpdateCommentForm
+from .forms import CommentForm,CreatePostForm,UpdatePostForm,RatePostForm,UpdateCommentForm
 
 class All_Blogs(ListView):
     context_object_name = 'blog'
@@ -56,7 +56,17 @@ class CreatePost(LoginRequiredMixin,CreateView):
 class UserPost(View):
     def get(self,request):
         posts=Blog.objects.filter(user=self.request.user)
-        return render(request,'blog/userblogs.html',{'posts':posts})
+        profile=get_object_or_404(Profile,user=self.request.user)
+        return render(request,'blog/userblogs.html',{'posts':posts,'profile':profile})
+
+
+
+
+class UpdatePost(UpdateView):
+    model = Blog
+    success_url = reverse_lazy('blog:user_post')
+    template_name = 'blog/upatepost.html'
+    form_class =UpdatePostForm
 
 class DeletePost(DeleteView):
     model = Blog
@@ -124,4 +134,10 @@ def AddUnDisLikePost(request,post_id):
     unlikepost = get_object_or_404(UnlikePost, user=request.user, post=blog,is_unlike=True)
     unlikepost.delete()
     return redirect('blog:detail', blog.id)
+
+
+def AddRate(request,post_id):
+    form=RatePostForm(request.POST or None)
+    if form.is_valid():
+        pass
 

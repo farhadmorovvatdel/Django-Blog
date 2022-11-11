@@ -1,4 +1,3 @@
-
 {% extends 'include/admin template/base.html' %}
 {% block admin_title %}
     <title>UserPost Page</title>
@@ -28,7 +27,7 @@
               </a>
             </li>
             <li class="nav-item">
-{#              <a class="nav-link" href="{% url 'accounts:upateprofile' profile.id %}">#}
+             <a class="nav-link" href="{% url 'accounts:upateprofile' profile.id %}">
                 <span class="menu-title">Edit Profile </span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
@@ -59,6 +58,20 @@
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
             </li>
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" href="pages/charts/chartjs.html">#}
+{#                <span class="menu-title">Charts</span>#}
+{#                <i class="mdi mdi-chart-bar menu-icon"></i>#}
+{#              </a>#}
+{#            </li>#}
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" href="pages/tables/basic-table.html">#}
+{#                <span class="menu-title">Tables</span>#}
+{#                <i class="mdi mdi-table-large menu-icon"></i>#}
+{#              </a>#}
+{#            </li>#}
+{#            <li class="nav-item">#}
+
             <li class="nav-item sidebar-actions">
               <span class="nav-link">
                 <a class="btn btn-gradient-primary mt-4 mr-2" href="{% url 'blog:create_post' %}">+ Add Post</a>
@@ -67,43 +80,60 @@
           </ul>
         </nav>
         <!-- partial -->
-{#        <div class="main-panel">#}
-{#          <div class="content-wrapper">#}
-{#            <div class="page-header">#}
-{#              <h3 class="page-title">#}
-{#                <span class="bg-info-primary me-2">#}
-{#                   Profile#}
-{#                </span>#}
-{#              </h3>#}
-{#            </div>#}
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="bg-info-primary me-2">
+                   Profile
+                </span>
+              </h3>
+            </div>
               <div class="row">
-                  <div class="col-9">
-                  <table>
-                      <tr>
-                        <td>title</td>
-                        <td>publish</td>
-                        <td>image</td>
-                        <td>description</td>
-                       <td>category</td>
-                     </tr>
-                     <tr>
-                        {% for post in posts %}
-                          <td> {{ post.title }}</td>
-                          <td>{{ post.publish }}</td>
-                          {% if post.image %}
-                            <td> <img src="{{ post.image.url }}"></td>
-                          {% endif %}
-                          <td>{{ post.description }}</td>
-                          <td> {{ post.category.title}}</td>
-                       {% endfor %}
-                     </tr>
-                  </table>
-                  </div>
-                  <div class="col-3">
-                  </div>
+                     <div class="col-12">
+                         <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                <th scope="col">Number</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Decription</th>
+                                <th scope="col">Publish</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                             {% for item in posts %}
+                                <tr>
+                                   <th scope="row">{{ forloop.counter }}</th>
+                                   <td>{{ item.title }}</td>
+                                   <td>{{ item.description|truncatewords:3 }}</td>
+                                    {% if item.publish == True %}
+                                       <td>&#10004;</td>
+                                    {% else %}
+                                    <td>&times;</td>
+                                    {% endif %}
+                                   {% if item.image %}
+                                     <td><img src="{{ item.image.url }}"></td>
+                                    {% else %}
+                                    <td> <img src="/static/assets/images/profile/avatar.jpg" width="50px" height="50px"></td>
+                                    {% endif %}
+                                   <td>{{ item.category }}</td>
+                                    <td><a class="btn btn-success btn-sm" href="{{ item.get_absolute_url }}">View Post</a></td>
+                                    <td><a class="btn btn-warning btn-sm" href="{% url 'blog:update_post' item.id %}" >Update Post</a></td>
+                                    <td><a class="btn btn-danger btn-sm" href="{% url 'blog:delete_post' item.id %}">Delete Post</a></td>
+                                </tr>
+                            {% endfor %}
+                                </tbody>
+                         </table>
+                     </div>
+
               </div>
+
+
+          </div>
+
+        </div>
+
       </div>
 {% endblock %}
-
-
-

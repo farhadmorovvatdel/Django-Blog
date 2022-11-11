@@ -1,9 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import  slugify
-from django.utils import timezone
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.urls import reverse
+from django.core.validators import MaxValueValidator,MinValueValidator
+
+
+
+
+
+
 class Category(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50,unique=True)
@@ -13,7 +19,6 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Categories'
         verbose_name_plural = 'Categories'
-
 
 
 class Blog(models.Model):
@@ -26,6 +31,8 @@ class Blog(models.Model):
     image=models.ImageField(upload_to='blogs/',blank=True)
     description=RichTextUploadingField(null=True,blank=True)
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name='categories',null=True)
+    rate=models.PositiveIntegerField(null=True,blank=True,validators=[MinValueValidator(0),MaxValueValidator(5)])
+
     def __str__(self):
         return  f'{self.user.username}-{self.title}'
 
