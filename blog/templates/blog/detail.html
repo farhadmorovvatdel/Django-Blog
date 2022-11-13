@@ -15,33 +15,60 @@
       </div>
     </div>
 </br>
-    <form method="post" action="">
+    <form method="post" action="{% url 'blog:AddRate' post.id %}">
     {% csrf_token %}
-
+    {{ addrateform }}
     <input type="submit" value="send rate" class="btn btn-primary btn-sm">
-
     </form>
+    <span> AvrageRate:     {{ post.AvragePostRate }}   </span>
+    <p>  CountRate:     {{ post.TotalCountRate }}  </p>
   <form method="post" action="{{ post.AddComment }}">
     {% csrf_token %}
      {{ commentform.as_p }}
     <button type="submit" class="btn btn-success btn-sm">send comment</button>
   </form>
     <br>
-   <p>
-   {% if like is False and unlike is False%}
-          <a class="btn btn-primary btn-sm " href="{{ post.LikePost }}">LikePost</a>
-          <a class="btn btn-primary btn-sm  " href="{{ post.UnlikePost }}">UnLikePost</a>
-   {% elif like is True %}
-          <a class="btn btn-primary btn-sm " href={{ post.DisLikePost }}>DislikePost</a>
-          <a class="btn btn-primary btn-sm disabled " href="{{ post.UnlikePost }}">UnLikePost</a>
-   {% elif unlike is True %}
-          <a class="btn btn-primary btn-sm disabled " href="{{ post.LikePost }}">LikePost</a>
-          <a class="btn btn-primary btn-sm " href={{ post.UnDislikePost }}>DisUnlikePost</a>
-    {% endif %}
+
+
+<form method="post" action="{{ post.LikePost }}">
+{% csrf_token %}
+    {% if request.user  in post.likes.all %}
+    <button type="submit" class="btn btn-primary btn-sm disabled" name="post_id" value="{{ post.id }}">Like</button>
+   {% else %}
+ <button type="submit" class="btn btn-primary btn-sm  " name="post_id" value="{{ post.id }}">Like</button>
+{% endif %}
+</form>
+    <br>
+<form method="post" action="{{ post.UnLikePost }}">
+{% csrf_token %}
+    {% if request.user not in post.unlikes.all %}
+
+  <button type="submit" class="btn btn-primary btn-sm" name="post_id" value="{{ post.id }}">Unlike</button>
+{% else  %}
+    <button type="submit" class="btn btn-primary btn-sm disabled" name="post_id" value="{{ post.id }}">Unlike</button>
+{% endif %}
+</form>
+    </br>
+{#    {% if request.user in post.likes.all %}#}
+{#     <a class="btn btn-primary btn-sm" href="{% url 'blog:DisLikePost' post.id %}">DisLike</a>#}
+{#        {% else %}#}
+{#        <a class="btn btn-primary btn-sm disabled" href="{% url 'blog:DisLikePost' post.id %}">DisLike</a>#}
+{#{% endif %}#}
+{#   {% if like is False and unlike is False %}#}
+{#          <a class="btn btn-primary btn-sm " href="{{ post.LikePost }}">LikePost</a>#}
+{#          <a class="btn btn-primary btn-sm  " href="{{ post.UnlikePost }}">UnLikePost</a>#}
+{#   {% elif like is True %}#}
+{#          <a class="btn btn-primary btn-sm " href={{ post.DisLikePost }}>DislikePost</a>#}
+{#          <a class="btn btn-primary btn-sm disabled " href="{{ post.UnlikePost }}">UnLikePost</a>#}
+{#   {% elif unlike is True %}#}
+{#          <a class="btn btn-primary btn-sm disabled " href="{{ post.LikePost }}">LikePost</a>#}
+{#          <a class="btn btn-primary btn-sm " href={{ post.UnDislikePost }}>DisUnlikePost</a>#}
+{#    {% endif %}#}
 
 
 
     <span> Total Likes :{{ post.TotalLikes }}</span>
+    <span> Total Likes :{{ post.TotalUnLikes }}</span>
 
 {#     <a class="btn btn-primary btn-sm disabled" href="{{ post.UnlikePost }}">UnLikePost</a>#}
 {# #}

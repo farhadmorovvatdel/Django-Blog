@@ -5,7 +5,7 @@ from django.utils.text import  slugify
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.urls import reverse
 from django.core.validators import MaxValueValidator,MinValueValidator
-
+from django.db.models import Avg
 
 
 
@@ -32,9 +32,8 @@ class Blog(models.Model):
     image=models.ImageField(upload_to='blogs/',blank=True)
     description=RichTextUploadingField(null=True,blank=True)
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name='categories',null=True)
-
-
-
+    likes=models.ManyToManyField(User,related_name='userlike')
+    unlikes=models.ManyToManyField(User,related_name='userunlike')
     def __str__(self):
         return  f'{self.user.username}-{self.title}'
 
@@ -48,15 +47,23 @@ class Blog(models.Model):
 
     def LikePost(self):
         return reverse('blog:LikePost',args={self.id})
-
-    def UnlikePost(self):
+    def UnLikePost(self):
         return reverse('blog:UnLikePost',args={self.id})
-
-    def UnDislikePost(self):
-        return reverse('blog:UnDisLikePost',args={self.id})
-
-    def DisLikePost(self):
-        return reverse('blog:DisLikePost',args={self.id})
+    def TotalLikes(self):
+        total=self.likes.count()
+        return total
+    def TotalUnLikes(self):
+        total=self.unlikes.count()
+        return total
+    #
+    # def UnlikePost(self):
+    #     return reverse('blog:UnLikePost',args={self.id})
+    #
+    # def UnDislikePost(self):
+    #     return reverse('blog:UnDisLikePost',args={self.id})
+    #
+    # def DisLikePost(self):
+    #     return reverse('blog:DisLikePost',args={self.id})
 
     def AddComment(self):
         return reverse('blog:AddComment',args={self.id})
@@ -67,11 +74,21 @@ class Blog(models.Model):
     def TotalComments(self):
         total=self.postcomment.count()
         return total
-    def TotalLikes(self):
-        total=self.postlike.count()
-        return total
-    def TotalUnlikes(self):
-        total=self.postunlike.count()
+    # def TotalLikes(self):
+    #     total=self.postlike.count()
+    #     return total
+    # def TotalUnlikes(self):
+    #     total=self.postunlike.count()
+    #     return total
+
+    def AvragePostRate(self):
+        rate=self.postrate.aggregate(Avg('rate'))
+        if (rate['rate__avg']) is None:
+             return 'there is no rate'
+        else:
+            return str(round(rate['rate__avg'],2))
+    def TotalCountRate(self):
+        total=self.postrate.count()
         return total
 
 class Comment(models.Model):
@@ -90,29 +107,31 @@ class Comment(models.Model):
 
 
 
-class LikePost(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='userlike')
-    post=models.ForeignKey(Blog,on_delete=models.CASCADE,null=True,related_name='postlike')
-    is_like = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'{self.user.username} - {self.post.title}'
-
-
-
-
-class UnlikePost(models.Model):
-    user= models.ForeignKey(User,on_delete=models.CASCADE,related_name='userunlike')
-    post= models.ForeignKey(Blog, on_delete=models.CASCADE,related_name='postunlike')
-    is_unlike=models.BooleanField(default=False)
-    def __str__(self):
-        return f'{self.user.username} - {self.post.title}'
+#
+# class LikePost(models.Model):
+#     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='userlike')
+#     post=models.ForeignKey(Blog,on_delete=models.CASCADE,null=True,related_name='postlike')
+#     is_like = models.BooleanField(default=False)
+#
+#     def __str__(self):
+#         return f'{self.user.username} - {self.post.title}'
+#
+#
+#
+#
+# class UnlikePost(models.Model):
+#     user= models.ForeignKey(User,on_delete=models.CASCADE,related_name='userunlike')
+#     post= models.ForeignKey(Blog, on_delete=models.CASCADE,related_name='postunlike')
+#     is_unlike=models.BooleanField(default=False)
+#     def __str__(self):
+#         return f'{self.user.username} - {self.post.title}'
 
 
 
 
 class RatePost(models.Model):
-    post= models.ForeignKey(Blog, on_delete=models.CASCADE,related_name='ratepost')
-    rate = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True)
+    user= models.ForeignKey(User,on_delete=models.CASCADE,related_name='rateuser',null=True)
+    post= models.ForeignKey(Blog, on_delete=models.CASCADE,related_name='postrate')
+    rate = models.PositiveIntegerField(validators=[MinValueValidator(0),MaxValueValidator(5)], null=True, blank=True)
 
 

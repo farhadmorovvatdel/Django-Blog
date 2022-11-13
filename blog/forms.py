@@ -1,14 +1,20 @@
+from unicodedata import category
+
 from django import forms
 from django.core.validators import MinValueValidator
 
-from .models import Comment,Blog
-
+from .models import Comment, Blog, RatePost
 
 
 class CommentForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+        self.fields['body'].required =True
     class Meta:
         model = Comment
         fields=['body']
+
 
 
 class CreatePostForm(forms.ModelForm):
@@ -65,7 +71,14 @@ class UpdateCommentForm(forms.ModelForm):
         fields = ['body']
 
 
-class RatePostForm(forms.Form):
-    rate=forms.IntegerField(min_value=0,max_value=5)
+class RatePostForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RatePostForm, self).__init__(*args, **kwargs)
+        self.fields['rate'].required = True
+    class Meta:
+        model = RatePost
+        fields = ['rate',]
+
+
 
 
