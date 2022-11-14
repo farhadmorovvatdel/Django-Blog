@@ -11,11 +11,11 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .models import Profile
 from .forms import UpdateProfileForm
-from .mixins import LoginUserMixin,AllowUser
+from .mixins import UpdateMixin
 from.forms import PasswordChangeForm
 from django.contrib.auth import authenticate
 from django.views.generic import DeleteView
-
+from blog.mixins import UserLoginMixin
 
 class Register(View):
 
@@ -79,7 +79,7 @@ def UserLogOut(request):
 
 
 
-class UserProfile(LoginUserMixin,View):
+class UserProfile(View):
     """
      User Profile
     """
@@ -88,11 +88,11 @@ class UserProfile(LoginUserMixin,View):
         profile=Profile.objects.get(user_id=request.user.id)
         return render(request,'accounts/profile.html',{'profile':profile})
 
-class UpdateProfile(LoginUserMixin,AllowUser,UpdateView):
+class UpdateProfile(UserLoginMixin,UpdateMixin,UpdateView):
     """
      Update Profile User
     """
-    permission_required = []
+
     template_name = 'accounts/updateprofile.html'
     form_class = UpdateProfileForm
     model = Profile
@@ -104,6 +104,7 @@ class UpdateProfile(LoginUserMixin,AllowUser,UpdateView):
        return  context
 
 
+
     def get_success_url(self):
         return  reverse_lazy('accounts:profile')
 
@@ -112,7 +113,12 @@ class UpdateProfile(LoginUserMixin,AllowUser,UpdateView):
 
 
 
-class PasswordChange(LoginUserMixin,View):
+
+
+
+
+
+class PasswordChange(UserLoginMixin,View):
     """
      Change Password User
     """

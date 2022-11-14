@@ -32,8 +32,8 @@ class Blog(models.Model):
     image=models.ImageField(upload_to='blogs/',blank=True)
     description=RichTextUploadingField(null=True,blank=True)
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name='categories',null=True)
-    likes=models.ManyToManyField(User,related_name='userlike',null=True)
-    unlikes=models.ManyToManyField(User,related_name='userunlike',null=True)
+    likes=models.ManyToManyField(User,related_name='userlike',)
+    unlikes=models.ManyToManyField(User,related_name='userunlike')
     def __str__(self):
         return  f'{self.user.username}-{self.title}'
 

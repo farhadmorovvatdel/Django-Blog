@@ -7,7 +7,11 @@ from .models import Blog, Comment, RatePost
 from django.urls import reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,DeleteView,UpdateView
 from .forms import CommentForm,CreatePostForm,UpdatePostForm,RatePostForm,UpdateCommentForm
-from .decorator import UserLoginRequired
+from .mixins import UserLoginMixin,UserAccessMixin
+from .decorator import UserLoginRequired,UserAccess
+
+
+
 
 class All_Blogs(ListView):
     context_object_name = 'blog'
@@ -57,7 +61,7 @@ class CreatePost(LoginRequiredMixin,CreateView):
 
 
 
-class UserPost(View):
+class UserPost(UserLoginMixin,View):
     def get(self,request):
         posts=Blog.objects.filter(user=self.request.user)
         profile=get_object_or_404(Profile,user=self.request.user)
@@ -66,12 +70,11 @@ class UserPost(View):
 
 
 
-class UpdatePost(UpdateView):
+class UpdatePost(UserLoginMixin,UserAccessMixin,UpdateView):
     model = Blog
     success_url = reverse_lazy('blog:user_post')
     template_name = 'blog/upatepost.html'
     form_class =UpdatePostForm
-    context_object_name = 'profile'
     def get_object(self,queryset=None):
         pk=self.kwargs['pk']
         query=Blog.objects.get(pk=pk)
@@ -83,7 +86,7 @@ class UpdatePost(UpdateView):
 
 
 
-class DeletePost(DeleteView):
+class DeletePost(LoginRequiredMixin,UserAccessMixin,DeleteView):
     model = Blog
     success_url = reverse_lazy('blog:user_post')
     template_name ='blog/confirm_delete.html'
@@ -100,6 +103,7 @@ class DeletePost(DeleteView):
 
 
 @UserLoginRequired()
+
 def AddComment(request,id):
     post=get_object_or_404(Blog,id=id)
     user=request.user
@@ -113,52 +117,25 @@ def AddComment(request,id):
         newcomment.save()
         return redirect('blog:detail',post.id)
     return render(request,'blog/detail.html')
+
 @UserLoginRequired()
+@UserAccess()
 def DeleteComment(request,comment_id):
     comment = Comment.objects.get(id=comment_id)
     comment.delete()
     return redirect('blog:detail',comment.post.id)
+
+
 @UserLoginRequired()
+@UserAccess()
 def UpdateComment(request,comment_id):
     commentt=get_object_or_404(Comment,id=comment_id)
     updatecomment = UpdateCommentForm(request.POST or None,instance=commentt)
     if updatecomment.is_valid():
        body = updatecomment.cleaned_data['body']
        comment = Comment.objects.filter(id=comment_id).update(body=body)
-
        return redirect('blog:detail',commentt.post.id)
     return render(request,'blog/updatecomment.html',{'updatecomment':updatecomment,'comment_id':comment_id})
-# @UserLoginRequired()
-# def AddLikePost(request,post_id):
-#      blog=get_object_or_404(Blog,id=post_id)
-#      is_likepost=LikePost.objects.filter(user=request.user,post=blog).exists()
-#      if is_likepost is False:
-#          addlike=LikePost.objects.create(user=request.user,post=blog,is_like=True)
-#          return redirect('blog:detail',post_id)
-#
-#      return render(request,'blog/detail.html')
-#
-#
-# def AddUnlikePost(request,post_id):
-#     blog = get_object_or_404(Blog, id=post_id)
-#     is_unlikepost = UnlikePost.objects.filter(user=request.user, post=blog).exists()
-#     if is_unlikepost is False:
-#         addunlike = UnlikePost.objects.create(user=request.user, post=blog, is_unlike=True)
-#         return redirect('blog:detail', post_id)
-#     return render(request, 'blog/detail.html')
-#
-#
-# def AddDisLikePost(request,post_id):
-#     blog = get_object_or_404(Blog, id=post_id)
-#     likepost = get_object_or_404(LikePost,user=request.user,post=blog,is_like=True)
-#     likepost.delete()
-#     return redirect('blog:detail',blog.id)
-#
-# def AddUnDisLikePost(request,post_id):
-#     blog = get_object_or_404(Blog, id=post_id)
-#     unlikepost = get_object_or_404(UnlikePost, user=request.user, post=blog,is_unlike=True)
-#     unlikepost.delete()
-#     return redirect('blog:detail', blog.id)
 
 @UserLoginRequired()
 def AddRate(request,post_id):

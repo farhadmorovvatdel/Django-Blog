@@ -8,7 +8,6 @@ urlpatterns=[
     path('logout',UserLogOut,name='logout'),
     path('profile/',UserProfile.as_view(),name='profile'),
     path('profile/<int:pk>/',UpdateProfile.as_view(),name='upateprofile'),
-
     path('passwordchange/',PasswordChange.as_view(),name='passwordchange'),
 
 ]

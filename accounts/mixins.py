@@ -1,21 +1,13 @@
-from django.contrib import  messages
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
-from django.urls import  reverse_lazy
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.models import User
+
+
+from accounts.models import Profile
+from django.shortcuts import Http404
 
 
 
-
-
-
-class LoginUserMixin:
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            messages.error(request, 'you must be login', 'danger')
-            return redirect(reverse_lazy('accounts:login'))
-        return super().dispatch(request, *args, **kwargs)
-
-
-
+class UpdateMixin:
+    def dispatch(self,request,pk,*args, **kwargs):
+        profile=Profile.objects.filter(id=pk).first()
+        if  profile.user == request.user:
+            return super(UpdateMixin,self).dispatch(request,*args,**kwargs)
+        raise Http404('You dont have permission ')
