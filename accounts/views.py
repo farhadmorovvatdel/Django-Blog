@@ -1,17 +1,17 @@
-
+from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.views import View
 from django.views.generic import UpdateView
 
 from .forms import SignupForms,LoginForm
-from django.contrib.auth .mixins import LoginRequiredMixin
+
 from  django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .models import Profile
 from .forms import UpdateProfileForm
-from .mixins import AllowUserMixin
+from .mixins import LoginUserMixin,AllowUser
 from.forms import PasswordChangeForm
 from django.contrib.auth import authenticate
 from django.views.generic import DeleteView
@@ -79,20 +79,20 @@ def UserLogOut(request):
 
 
 
-class UserProfile(AllowUserMixin,View):
+class UserProfile(LoginUserMixin,View):
     """
      User Profile
     """
-    allowed_user=['is_authenticated','is_superuser']
+
     def get(self,request):
         profile=Profile.objects.get(user_id=request.user.id)
         return render(request,'accounts/profile.html',{'profile':profile})
 
-class UpdateProfile(AllowUserMixin,UpdateView):
+class UpdateProfile(LoginUserMixin,AllowUser,UpdateView):
     """
      Update Profile User
     """
-    allowed_user = ['is_authenticated','is_superuser']
+    permission_required = []
     template_name = 'accounts/updateprofile.html'
     form_class = UpdateProfileForm
     model = Profile
@@ -102,6 +102,8 @@ class UpdateProfile(AllowUserMixin,UpdateView):
        context= super(UpdateProfile, self).get_context_data()
        context['profile']=Profile.objects.filter(id=id).first()
        return  context
+
+
     def get_success_url(self):
         return  reverse_lazy('accounts:profile')
 
@@ -110,7 +112,7 @@ class UpdateProfile(AllowUserMixin,UpdateView):
 
 
 
-class PasswordChange(LoginRequiredMixin,View):
+class PasswordChange(LoginUserMixin,View):
     """
      Change Password User
     """

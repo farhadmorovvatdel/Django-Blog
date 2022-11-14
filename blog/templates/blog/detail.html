@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
-
+{% block css %}<link rel="stylesheet" href="/static/css/my.css">{% endblock %}
 {% block content %}
     <div class="row">
       <div class="col-3">
-       <div class="card">
+       <div class="card bg-light">
          <div class="card-body">
            {% if post.image %}
-               <img src="{{ post.image.url }}">
+               <img src="{{ post.image.url }}" width="200px" height="200px" style="width: 100%">
            {% endif %}
-           <h5 class="card-title">{{ post.title }}</h5>
-           <p class="card-text">{{ post.description }}</p><a href="{% url 'accounts:profile'  %}" class="btn btn-primary"><p> user: {{ post.user.username }}</p></a>
+           <h5 class="card-title"> title: {{ post.title }}</h5>
+           <p class="card-text"> desc: {{ post.description }}</p>
+         {% if request.user.is_authenticated and request.user == post.user %}
+             <a href="{% url 'accounts:profile'  %}" class="btn btn-primary btn-sm"><p> user: {{ post.user.username }}</p></a>
+         {% endif %}
          </div>
       </div>
       </div>
@@ -24,6 +27,7 @@
     <p>  CountRate:     {{ post.TotalCountRate }}  </p>
   <form method="post" action="{{ post.AddComment }}">
     {% csrf_token %}
+{#      <textarea cols="50" rows="10" required name="comment" ></textarea>#}
      {{ commentform.as_p }}
     <button type="submit" class="btn btn-success btn-sm">send comment</button>
   </form>

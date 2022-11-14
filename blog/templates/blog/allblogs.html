@@ -1,19 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% for item in blog %}
-        <p>{{ item.title }}</p>
-        <p>{{ item.created }}</p>
-        {% if item.image %}
-       <img src="{{ item.image.url }}" width="80px" height="80px">
-        {% endif %}
-        <a href="{{ item.get_absolute_url }}">more info</a>
-    {% endfor %}
+    <div class="row">
+     {% for item in blog %}
+     <div class="col-4">
+         <div class="card" style="width:300px">
+             {% if item.image %}
+           <img class="card-img-top" src="{{ item.image.url }}" alt="Card image" height="200px" width="100px" style="width:100%" >
+                 {% else %}
+                 <img src="/static/assets/images/profile/avatar.jpg" height="200px" width="100px" style="width:100%" >
+             {% endif %}
+           <div class="card-body">
+            <h4 class="card-title">{{ item.title }}</h4>
+             <p class="card-text">{{ item.description }}</p>
+            <a href="{{ item.get_absolute_url }}" class="btn btn-primary">more info</a>
+    </div>
+  </div>
+
+     </div>
+        {% endfor %}
+    </div>
     {% if is_paginated %}
   <ul class="pagination">
     {% if page_obj.has_previous %}
-      <li><a href="?page={{ page_obj.previous_page_number }}" class="btn btn-danger">قبلی</a></li>
+      <li><a href="?page={{ page_obj.previous_page_number }}" class="btn btn-light btn-sm ">&laquo;</a></li>
     {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
+{#      <li class="disabled"><span>&laquo;</span></li>#}
     {% endif %}
 
         <span class="current">
@@ -21,9 +32,9 @@
         </span>
 
     {% if page_obj.has_next %}
-      <li><a href="?page={{ page_obj.next_page_number }}">بعدی</a></li>
+      <li><a href="?page={{ page_obj.next_page_number }}" class="btn btn-light btn-sm ">&raquo;</a></li>
     {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
+{#      <li class="disabled"><span>&raquo;</span></li>#}
     {% endif %}
   </ul>
 {% endif %}

@@ -1,9 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views import View
-from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from .models import Blog, Comment, RatePost
 from django.urls import reverse_lazy
@@ -36,8 +34,6 @@ class DetailPost(DetailView):
         context['addrateform']=RatePostForm
 
         return context
-
-
 
 
 

@@ -11,9 +11,13 @@ class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields['body'].required =True
+        self.fields['body'].label ='comment'
     class Meta:
         model = Comment
-        fields=['body']
+        fields=['body',]
+        widgets = {
+            'body':forms.Textarea(attrs={'cols':30,'rows':10 }),
+        }
 
 
 
@@ -72,12 +76,15 @@ class UpdateCommentForm(forms.ModelForm):
 
 
 class RatePostForm(forms.ModelForm):
+    rate = forms.IntegerField(min_value=0,max_value=5)
     def __init__(self, *args, **kwargs):
         super(RatePostForm, self).__init__(*args, **kwargs)
         self.fields['rate'].required = True
+
     class Meta:
         model = RatePost
         fields = ['rate',]
+
 
 
 
