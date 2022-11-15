@@ -9,8 +9,6 @@ from django.db.models import Avg
 
 
 
-
-
 class Category(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50,unique=True)
@@ -55,15 +53,6 @@ class Blog(models.Model):
     def TotalUnLikes(self):
         total=self.unlikes.count()
         return total
-    #
-    # def UnlikePost(self):
-    #     return reverse('blog:UnLikePost',args={self.id})
-    #
-    # def UnDislikePost(self):
-    #     return reverse('blog:UnDisLikePost',args={self.id})
-    #
-    # def DisLikePost(self):
-    #     return reverse('blog:DisLikePost',args={self.id})
 
     def AddComment(self):
         return reverse('blog:AddComment',args={self.id})
@@ -74,12 +63,6 @@ class Blog(models.Model):
     def TotalComments(self):
         total=self.postcomment.count()
         return total
-    # def TotalLikes(self):
-    #     total=self.postlike.count()
-    #     return total
-    # def TotalUnlikes(self):
-    #     total=self.postunlike.count()
-    #     return total
 
     def AvragePostRate(self):
         rate=self.postrate.aggregate(Avg('rate'))
@@ -104,27 +87,6 @@ class Comment(models.Model):
         return reverse('blog:DeleteComment',args={self.id})
     def UpdateComment(self):
         return reverse('blog:UpdateComment',args={self.id})
-
-
-
-#
-# class LikePost(models.Model):
-#     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='userlike')
-#     post=models.ForeignKey(Blog,on_delete=models.CASCADE,null=True,related_name='postlike')
-#     is_like = models.BooleanField(default=False)
-#
-#     def __str__(self):
-#         return f'{self.user.username} - {self.post.title}'
-#
-#
-#
-#
-# class UnlikePost(models.Model):
-#     user= models.ForeignKey(User,on_delete=models.CASCADE,related_name='userunlike')
-#     post= models.ForeignKey(Blog, on_delete=models.CASCADE,related_name='postunlike')
-#     is_unlike=models.BooleanField(default=False)
-#     def __str__(self):
-#         return f'{self.user.username} - {self.post.title}'
 
 
 
