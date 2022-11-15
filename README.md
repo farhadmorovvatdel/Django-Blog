@@ -17,12 +17,12 @@ pip install -r requirements.txt
 
 Run the project
 
-python manage.py runserver 8002
+python manage.py runserver 8000
 
 
 Now copy/paste this address in your browser URL bar:
 
-http://127.0.0.1:8002/
+http://127.0.0.1:8000/
 
 
 Use The Project:
@@ -35,4 +35,4 @@ password:1234
 
 
 main admin panel path:
-http://127.0.0.1:800/blog-django/
+http://127.0.0.1:8000/blog-django/
