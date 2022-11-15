@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import All_Blogs,DetailPost,CreatePost,UserPost,DeletePost,UpdatePost,AddComment,DeleteComment,\
     UpdateComment,AddRate,AddLikePost,AddUnlikePost
+
+
 app_name='blog'
 urlpatterns=[
     path('',All_Blogs.as_view(),name='Blogs'),
