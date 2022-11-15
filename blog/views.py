@@ -23,6 +23,7 @@ class All_Blogs(ListView):
         return  blog
 
 
+
 class DetailPost(DetailView):
     template_name = 'blog/detail.html'
     context_object_name = 'post'
