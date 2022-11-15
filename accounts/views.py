@@ -7,14 +7,13 @@ from .forms import SignupForms,LoginForm
 
 from  django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import login,logout
 from django.contrib import messages
 from .models import Profile
 from .forms import UpdateProfileForm
 from .mixins import UpdateMixin
 from.forms import PasswordChangeForm
 from django.contrib.auth import authenticate
-from django.views.generic import DeleteView
 from blog.mixins import UserLoginMixin
 
 class Register(View):
