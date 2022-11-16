@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from .models import Profile
 
 
+
+
 # --------------  UserSignup Form ----------------
 class SignupForms(forms.Form):
     username=forms.CharField(label='UserName',widget=forms.TextInput(attrs={'placeholder':'Please Enter Username','class':'form-control'}))
