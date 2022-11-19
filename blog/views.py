@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views import View
 from accounts.models import Profile
@@ -44,7 +43,7 @@ class DetailPost(DetailView):
 
 
 
-class CreatePost(LoginRequiredMixin,CreateView):
+class CreatePost(UserLoginMixin,CreateView):
     template_name = 'blog/create_post.html'
     success_url = reverse_lazy('blog:user_post')
     form_class = CreatePostForm
@@ -87,7 +86,7 @@ class UpdatePost(UserLoginMixin,UserAccessMixin,UpdateView):
 
 
 
-class DeletePost(LoginRequiredMixin,UserAccessMixin,DeleteView):
+class DeletePost(UserLoginMixin,UserAccessMixin,DeleteView):
     model = Blog
     success_url = reverse_lazy('blog:user_post')
     template_name ='blog/confirm_delete.html'
@@ -142,7 +141,7 @@ def UpdateComment(request,comment_id):
 def AddRate(request,post_id):
     post=get_object_or_404(Blog,pk=post_id)
     form=RatePostForm(request.POST or None)
-    is_exists=RatePost.objects.filter(user=request.user, post=post).exists()
+    is_exists=RatePost.objects.filter(user=request.user,post=post).exists()
     if is_exists:
         messages.error(request,'you alreday sent rate','danger')
         return redirect ('blog:detail',post.id)
