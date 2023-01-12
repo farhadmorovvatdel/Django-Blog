@@ -21,20 +21,19 @@
     </div>
     {% if is_paginated %}
   <ul class="pagination">
+  {% for pagenumber in paginator.page_range %}
+      <li class="{% if page_obj.number == pagenumber %} btn btn-primary btn-sm {% endif %}"><a href="?page={{ pagenumber }}" class="btn btn-sm">{{ pagenumber }}</a></li>
+  {% endfor %}
     {% if page_obj.has_previous %}
       <li><a href="?page={{ page_obj.previous_page_number }}" class="btn btn-light btn-sm ">&laquo;</a></li>
-    {% else %}
-{#      <li class="disabled"><span>&laquo;</span></li>#}
     {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
+{##}
+{#        <span class="current">#}
+{#            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
+{#        </span>#}
+{##}
     {% if page_obj.has_next %}
       <li><a href="?page={{ page_obj.next_page_number }}" class="btn btn-light btn-sm ">&raquo;</a></li>
-    {% else %}
-{#      <li class="disabled"><span>&raquo;</span></li>#}
     {% endif %}
   </ul>
 {% endif %}
