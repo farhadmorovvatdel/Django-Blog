@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect
 from django.views import View
 from django.views.generic import UpdateView
 
-from .forms import SignupForms,LoginForm
+from .forms import SignupForms,LoginForm,UserForm,UserForgotPasswordForm
 
 from  django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -99,7 +99,7 @@ class UpdateProfile(UserLoginMixin,UpdateMixin,UpdateView):
     def get_context_data(self, **kwargs):
        id=self.kwargs['pk']
        context= super(UpdateProfile, self).get_context_data()
-       context['profile']=Profile.objects.filter(id=id).first()
+       context['profile']=Profile.objects.filter(id=id).only('image').first()
        return  context
 
 
@@ -143,3 +143,44 @@ class PasswordChange(UserLoginMixin,View):
             else:
                 form.add_error('currentpassword','Password is wrong')
         return render(request, 'accounts/PasswordChange.html', {'form': form})
+
+class UserView(View):
+    def get(self, request):
+        form=UserForm()
+        return render(request, 'accounts/user.html',{'form': form})
+    def post(self,request):
+        form=UserForm(request.POST)
+        global user
+        if form.is_valid():
+            username=form.cleaned_data['username']
+            user=User.objects.filter(username=username).first()
+            if user :
+               return redirect("accounts:userforgotpasswordview",user.username)
+
+        else:
+            form.add_error('username',"username is uncorrect")
+
+        return render(request, 'accounts/user.html', {'form':form,"user":user})
+
+
+class UserForgotPasswordView(View):
+    def get(self, request,*args, **kwargs):
+        name=kwargs["name"]
+
+        form =UserForgotPasswordForm()
+
+        return render(request, 'accounts/userforgotpasswordform.html',{"form":form})
+    def post(self,request,*args,**kwargs):
+        name=kwargs["name"]
+        form=UserForgotPasswordForm(request.POST)
+        if form.is_valid():
+            pass1=form.cleaned_data['password']
+            user=User.objects.filter(username=name).first()
+            if user:
+                user.set_password(pass1)
+                user.save()
+                return redirect("accounts:login")
+
+        return render(request, 'accounts/userforgotpasswordform.html', {"form": form})
+
+

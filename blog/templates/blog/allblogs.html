@@ -27,11 +27,7 @@
     {% if page_obj.has_previous %}
       <li><a href="?page={{ page_obj.previous_page_number }}" class="btn btn-light btn-sm ">&laquo;</a></li>
     {% endif %}
-{##}
-{#        <span class="current">#}
-{#            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
-{#        </span>#}
-{##}
+
     {% if page_obj.has_next %}
       <li><a href="?page={{ page_obj.next_page_number }}" class="btn btn-light btn-sm ">&raquo;</a></li>
     {% endif %}

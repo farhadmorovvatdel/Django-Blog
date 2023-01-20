@@ -10,7 +10,7 @@
             <form method="post">
                 {% csrf_token %}
 
-  <div class="form-outline mb-4">
+      <div class="form-outline mb-4">
       {{ form.as_p }}
 
   </div>
@@ -25,27 +25,13 @@
 
   <!-- Submit button -->
   <button type="submit" class="btn btn-primary btn-block mb-4">login</button>
-
+   </form>
   <!-- Register buttons -->
   <div class="text-center">
       <span> Not Yet Register ?  <a href="{% url 'accounts:register' %}" style="text-decoration: none">Register</a></span>
-    <button type="button" class="btn btn-link btn-floating mx-1">
-      <i class="fab fa-facebook-f"></i>
-    </button>
-
-    <button type="button" class="btn btn-link btn-floating mx-1">
-      <i class="fab fa-google"></i>
-    </button>
-
-    <button type="button" class="btn btn-link btn-floating mx-1">
-      <i class="fab fa-twitter"></i>
-    </button>
-
-    <button type="button" class="btn btn-link btn-floating mx-1">
-      <i class="fab fa-github"></i>
-    </button>
+    <a href="{% url "accounts:userview" %}" style="text-decoration: none">  <span> Forgot Password</span></a>
   </div>
-</form>
+
         </div>
     </div>
     </div>

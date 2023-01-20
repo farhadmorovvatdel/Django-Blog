@@ -15,7 +15,7 @@ from .decorator import UserLoginRequired,UserAccess
 class All_Blogs(ListView):
     context_object_name = 'blog'
     template_name = 'blog/allblogs.html'
-    paginate_by = 3
+    paginate_by = 1
 
     def get_queryset(self):
         blog=Blog.objects.filter(publish=True)
@@ -36,6 +36,8 @@ class DetailPost(DetailView):
         context = super(DetailPost, self).get_context_data(**kwargs)
         context['commentform']=CommentForm
         context['addrateform']=RatePostForm
+
+
 
         return context
 

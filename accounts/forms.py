@@ -77,3 +77,19 @@ class PasswordChangeForm(forms.Form):
             raise forms.ValidationError('passwords must be match')
         return pass2
 
+class UserForm(forms.Form):
+    username = forms.CharField(label='Username', widget=forms.TextInput(
+        attrs={'placeholder': 'Please enter Username', 'class': 'form-control'}))
+
+
+class UserForgotPasswordForm(forms.Form):
+    password = forms.CharField(label='New Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'enter password', 'class': 'form-control'}))
+    password2 = forms.CharField(label='Confirm New Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'enter confirm password', 'class': 'form-control'}))
+    def clean_password2(self):
+        pass1=self.cleaned_data['password']
+        pass2=self.cleaned_data['password2']
+        if pass1 and pass2 is None and pass1 != pass2:
+            raise forms.ValidationError('passwords must be match')
+        return pass2
